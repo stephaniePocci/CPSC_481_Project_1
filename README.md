@@ -1,3 +1,6 @@
 # CPSC_481_Project_1
-
-# test git commit on macOS 
+## Authors:
+## Stephanie Pocci
+## Shaleen Mathur
+## Karnikaa Velumani
+## Steven Rico
