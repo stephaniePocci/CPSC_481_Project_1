@@ -52,11 +52,11 @@ class SearchProblem:
         """
         util.raiseNotDefined()
 
-    def getCostOfActions(self, actions):
+    def getCostOfmoves(self, moves):
         """
-         actions: A list of actions to take
+         moves: A list of moves to take
 
-        This method returns the total cost of a particular sequence of actions.
+        This method returns the total cost of a particular sequence of moves.
         The sequence must be composed of legal moves.
         """
         util.raiseNotDefined()
@@ -76,7 +76,7 @@ def depthFirstSearch(problem):
     """
     Search the deepest nodes in the search tree first.
 
-    Your search algorithm needs to return a list of actions that reaches the
+    Your search algorithm needs to return a list of moves that reaches the
     goal. Make sure to implement a graph search algorithm.
 
     To get started, you might want to try some of these simple commands to
@@ -87,60 +87,47 @@ def depthFirstSearch(problem):
     print("Start's successors:", problem.getSuccessors(problem.getStartState()))
     """
     "*** YOUR CODE HERE ***"
-    start_pt = problem.getStartState()
-    if problem.isGoalState(start_pt):
+    start_pt = problem.getStartState() # retrieves starting node
+    if problem.isGoalState(start_pt): # if solved, return the array
         return []
     
-    queue = util.Stack()
-    visited = []
-    queue.push((start_pt, []))
+    stack = util.Stack() # stack queue for DFS
+    visited = [] # nodes already visited
+    stack.push((start_pt, [])) # adds starting node to stack
     
-    while not queue.isEmpty():
-        current_pt, moves = queue.pop()
-        if current_pt not in visited:
-            visited.append(current_pt)
-            if problem.isGoalState(current_pt):
+    while not stack.isEmpty(): # while there are still nodes left
+        current_pt, moves = stack.pop() # pops the most recent node
+        if current_pt not in visited: # if node has not been traversed
+            visited.append(current_pt) # add node to the queue
+            if problem.isGoalState(current_pt): # if node is the goal node, then return the list of moves
                 return moves
             for next_pt, action, cost in problem.getSuccessors(current_pt):
-                next_move = moves + [action]
-                queue.push((next_pt, next_move))
+                next_move = moves + [action] # adds an additional action for the next move
+                stack.push((next_pt, next_move)) # adds the next move to the stack
 
 def breadthFirstSearch(problem):
     """Search the shallowest nodes in the search tree first."""
     "*** YOUR CODE HERE ***"
-        #to be explored (FIFO)
-    frontier = util.Queue()
+    start_pt = problem.getStartState() # retrieves starting node
+    queue = util.Queue() # create queue for BFS
+    visited = [] # a list for previously visited nodes
+    queue.push((start_pt, [], 0)) # add starting node to queue 
     
-    #previously expanded states (for cycle checking), holds states
-    exploredNodes = []
-    
-    startState = problem.getStartState()
-    startNode = (startState, [], 0) #(state, action, cost)
-    
-    frontier.push(startNode)
-    
-    while not frontier.isEmpty():
-        #begin exploring first (earliest-pushed) node on frontier
-        currentState, actions, currentCost = frontier.pop()
-        
-        if currentState not in exploredNodes:
-            #put popped node state into explored list
-            exploredNodes.append(currentState)
-
-            if problem.isGoalState(currentState):
-                return actions
+    while not queue.isEmpty(): # while there are still nodes left
+        current_pt, moves, cost = queue.pop() # pop most recent node, action, and cost
+        if current_pt not in visited: # if current node has not been traversed
+            visited.append(current_pt) # add popped node into visited list
+            if problem.isGoalState(current_pt): # if node is in the goal state, return the list of moves
+                return moves
             else:
-                #list of (successor, action, stepCost)
-                successors = problem.getSuccessors(currentState)
-                
-                for succState, succAction, succCost in successors:
-                    newAction = actions + [succAction]
-                    newCost = currentCost + succCost
-                    newNode = (succState, newAction, newCost)
+                successors = problem.getSuccessors(current_pt) # add node to list of moves
+                for next_pt, action, cost in successors: # for next node in successors list
+                    next_move = moves + [action] 
+                    cost += cost # add new cost to itself
+                    next_node = (next_pt, next_move, cost) # set the next node
+                    queue.push(next_node) # push the new node to the queue (list of moves)
 
-                    frontier.push(newNode)
-
-    return actions
+    return moves # return the list of total moves
     util.raiseNotDefined()
 
 def uniformCostSearch(problem):
