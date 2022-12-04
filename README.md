@@ -1,4 +1,4 @@
-# CPSC_481_Project_1
+# CPSC_481_Project_3
 ## Authors:
 <p> Stephanie Pocci </p>
 <p> Shaleen Mathur </p>
